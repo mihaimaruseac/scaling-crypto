@@ -6,6 +6,9 @@ NVCC            := $(CUDA_BIN_PATH)/nvcc
 GCC             := g++
 
 CPPFLAGS  :=
+ifdef BITS
+CPPFLAGS += -DBITS=$(BITS)
+endif
 ifdef THREADS
 CPPFLAGS += -DTHREADS=$(THREADS)
 endif
@@ -30,7 +33,7 @@ CCFLAGS   := -m64 -arch=sm_30 $(CPPFLAGS)
 NVCCFLAGS := -m64 -arch=sm_30 $(CPPFLAGS)
 INCLUDES  := -I$(CUDA_INC_PATH) -I. -I$(CUDA_PATH)/samples/common/inc
 
-all: BigNumAdd prod Exp
+all: BigNumAdd prod Exp Rns
 
 BigNumAdd: BigNumAdd.cu
 	$(NVCC) $(NVCCFLAGS) $(INCLUDES) $(LDFLAGS) -O3 -o $@ $<
@@ -39,4 +42,7 @@ prod: prod.cu
 	$(NVCC) $(NVCCFLAGS) $(INCLUDES) $(LDFLAGS) -O3 -o $@ $<
 
 Exp: Exp.cu
+	$(NVCC) $(NVCCFLAGS) $(INCLUDES) $(LDFLAGS) -O3 -o $@ $<
+
+Rns: Rns.cu
 	$(NVCC) $(NVCCFLAGS) $(INCLUDES) $(LDFLAGS) -O3 -o $@ $<
