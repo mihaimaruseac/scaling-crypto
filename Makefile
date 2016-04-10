@@ -28,12 +28,15 @@ ifdef PTX
 CPPFLAGS += -Xptxas=-v
 endif
 
-LDFLAGS   := -L$(CUDA_LIB_PATH) -lcudart
-CCFLAGS   := -m64 -arch=sm_30 $(CPPFLAGS)
+LDFLAGS   := -L$(CUDA_LIB_PATH)
+CCFLAGS   := -m64 $(CPPFLAGS)
 NVCCFLAGS := -m64 -arch=sm_30 $(CPPFLAGS)
 INCLUDES  := -I$(CUDA_INC_PATH) -I. -I$(CUDA_PATH)/samples/common/inc
 
-all: BigNumAdd prod Exp Rns
+all: Exp-c
+
+Exp-c: Exp-c.c
+	$(GCC) $(CCFLAGS) $(INCLUDES) $(LDFLAGS) -O3 -o $@ $<
 
 BigNumAdd: BigNumAdd.cu
 	$(NVCC) $(NVCCFLAGS) $(INCLUDES) $(LDFLAGS) -O3 -o $@ $<
